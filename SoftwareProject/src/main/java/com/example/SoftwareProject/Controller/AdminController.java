@@ -101,8 +101,8 @@ public class AdminController {
         return ResponseEntity.ok(prescriptionRepo.save(p));
     }
 
-    @PostMapping("/add")
-    public Prescription createPrescription(@RequestBody Prescription prescription) {
-        return prescriptionService.createPrescription(prescription);
-    }
+//    @PostMapping("/add")
+//    public Prescription createPrescription(@RequestBody Prescription prescription) {
+//        return prescriptionService.createPrescription(prescription);
+//    }
 }

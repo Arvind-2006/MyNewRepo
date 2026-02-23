@@ -1,5 +1,6 @@
 package com.example.SoftwareProject.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,7 @@ public class PrescriptionItem {
     private Long id;
 
     @ManyToOne
+    @JsonBackReference
     private Prescription prescription;
 
     @ManyToOne

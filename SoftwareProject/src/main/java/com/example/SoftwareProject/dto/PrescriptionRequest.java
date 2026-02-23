@@ -11,5 +11,6 @@ public class PrescriptionRequest {
     private String patientName;
     private String diagnosis;
     private List<ItemRequest> items;
+
 }
 

@@ -310,3 +310,54 @@ function deleteDoctor(id) {
         alert("Error deleting doctor");
     });
 }
+
+function showAddMedicineForm() {
+    document.getElementById("addMedicineForm").style.display = "block";
+}
+
+function hideAddMedicineForm() {
+    document.getElementById("addMedicineForm").style.display = "none";
+}
+
+function addMedicine() {
+
+    const token = localStorage.getItem("jwt");
+
+    if (!token) {
+        alert("You are not logged in!");
+        return;
+    }
+
+    const medicineData = {
+        medicineName: document.getElementById("medicineName").value,
+        description: document.getElementById("description").value,
+        price: parseFloat(document.getElementById("price").value),
+        manufacturer: document.getElementById("manufacturer").value
+    };
+
+    fetch("http://localhost:8080/admin/medicine", {   
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify(medicineData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Failed to add medicine");
+        }
+        return response.json();
+    })
+    .then(data => {
+        document.getElementById("medicineResponse").innerText =
+            "Medicine added successfully!";
+        hideAddMedicineForm();
+        loadMedicines(); // refresh list
+    })
+    .catch(error => {
+        console.error(error);
+        document.getElementById("medicineResponse").innerText =
+            "Error adding medicine!";
+    });
+}

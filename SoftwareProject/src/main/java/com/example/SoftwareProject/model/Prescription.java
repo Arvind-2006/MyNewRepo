@@ -7,25 +7,9 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-//@Entity
-//public class Prescription {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long prescriptionId;
-//
-//    private Long patientId;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "medicine_id")
-//    private Medicine medicine;
-//
-//    private int quantityPrescribed;
-//    private String dosage;
-//    private LocalDate expiryDate;
-//    private String status;
-//}
 @Getter
 @Setter
 @Entity
@@ -45,11 +29,13 @@ public class Prescription {
     @ManyToOne
     private User doctor;
 
-    @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL)
-    private List<PrescriptionItem> items;
+//    @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL)
+//    private List<PrescriptionItem> items;
 
     private String status;
 
     private LocalDate expiryDate;
 
+    @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<PrescriptionItem> items = new ArrayList<>();
 }

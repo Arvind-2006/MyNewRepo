@@ -82,8 +82,30 @@
       <p id="doctorResponse"></p>
     </div>
 
-    <button onclick="showAddPatientForm()">Add Patient</button>
+    <!-- <button onclick="showAddPatientForm()">Add Patient</button> -->
     <button onclick="showAddMedicineForm()">Add Medicine</button>
+    <div id="addMedicineForm" style="display: none">
+      <h3>Add Medicine</h3>
+      <input
+        type="text"
+        id="medicineName"
+        placeholder="Medicine Name"
+      /><br /><br />
+      <input
+        type="text"
+        id="description"
+        placeholder="Description"
+      /><br /><br />
+      <input type="number" id="price" placeholder="Price" /><br /><br />
+      <input
+        type="text"
+        id="manufacturer"
+        placeholder="Manufacturer"
+      /><br /><br />
+      <button onclick="addMedicine()">Submit</button>
+      <button onclick="hideAddMedicineForm()">Cancel</button>
+      <p id="medicineResponse"></p>
+    </div>
     <br /><br />
     <button onclick="logout()">Logout</button>
 

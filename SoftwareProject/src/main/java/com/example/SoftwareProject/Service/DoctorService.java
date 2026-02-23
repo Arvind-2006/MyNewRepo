@@ -73,7 +73,7 @@ public class DoctorService {
 //    }
     public DoctorProfileDTO getProfile(String username) {
 
-        Doctor doctor = doctorRepository.findByUserUsername(username)
+        Doctor doctor = (Doctor) doctorRepository.findByUserUsername(username)
                 .orElseThrow(() -> new RuntimeException("Doctor not found"));
 
         return new DoctorProfileDTO(

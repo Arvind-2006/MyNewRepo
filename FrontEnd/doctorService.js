@@ -1,53 +1,4 @@
-
-// function viewProfile() {
-
-//     const token = localStorage.getItem("jwt");
-
-//     fetch("http://localhost:8080/doctor/profile", {
-//         method: "GET",
-//         headers: {
-//             "Authorization": "Bearer " + token,
-//             "Content-Type": "application/json"
-//         }
-//     })
-//     .then(response => {
-//         if (!response.ok) {
-//             throw new Error("Failed to fetch doctor profile");
-//         }
-//         return response.json();
-//     })
-//     .then(data => {
-//         document.getElementById("doctorsList").style.display = "block";
-//         const tbody = document.getElementById("doctorBody");
-        
-//         tbody.innerHTML = "";
-
-//         data.forEach(doctor => {
-
-//             const row = document.createElement("tr");
-
-//             row.innerHTML = `
-//                 <td>${doctor.name}</td>
-//                 <td>${doctor.email}</td>
-//                 <td>${doctor.phone}</td>
-//                 <td>${doctor.specialization}</td>
-//                 <td>
-//                     <button onclick="deleteDoctor(${doctor.id})">
-//                         Delete
-//                     </button>
-//                 </td>
-//             `;
-
-//             tbody.appendChild(row);
-//         });
-
-//     })
-//     .catch(error => {
-//         console.error(error);
-//         alert("Error loading doctors");
-//     });
-// }
-
+const BASE_URL = "http://localhost:8080";
 function viewProfile() {
 
     const token = localStorage.getItem("jwt");
@@ -86,4 +37,58 @@ function viewProfile() {
         console.error(error);
         alert("Error loading profile");
     });
+}
+document.getElementById("prescriptionForm").addEventListener("submit", function(e) {
+    e.preventDefault(); // Prevent page reload
+
+    const patientName = document.getElementById("patientName").value;
+    const diagnosis = document.getElementById("diagnosis").value;
+    const medicineId = document.getElementById("medicineId").value;
+    const quantity = document.getElementById("quantity").value;
+
+    addPrescription(patientName, diagnosis, medicineId, quantity);
+});
+function addPrescription(patientName, diagnosis, medicineId, quantity) {
+    const token = localStorage.getItem("jwt");
+    if (!token) {
+        alert("You are not logged in!");
+        return;
+    }
+
+    const payload = {
+        patientName: patientName,
+        diagnosis: diagnosis,
+        items: [
+            {
+                medicineId: parseInt(medicineId),
+                quantity: parseInt(quantity)
+            }
+        ]
+    };
+
+    fetch(`${BASE_URL}/doctor/prescriptions`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(res => {
+        if (!res.ok) {
+            throw new Error("Failed to add prescription");
+        }
+        return res.json();
+    })
+    .then(data => {
+        console.log("Prescription added:", data);
+        alert("Prescription added successfully with ID: " + data.id);
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Error adding prescription: " + err.message);
+    });
+}
+function showAddPrescriptionForm() {
+    document.getElementById("addPrescriptionForm").style.display = "block";
 }
