@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Patient Dashboard</title>
+</head>
+<body>
+<h2>Patient Dashboard</h2>
+<p id="data"></p>
+<button onclick="logout()">Logout</button>
+
+<script>
+const token = localStorage.getItem("jwt");
+
+fetch("http://localhost:8080/patient/dashboard", {
+    headers: {
+        "Authorization": "Bearer " + token
+    }
+})
+.then(res => {
+    if (!res.ok) {
+        window.location.href = "login.html";
+    }
+    return res.text();
+})
+.then(data => {
+    document.getElementById("data").innerText = data;
+});
+
+function logout() {
+    localStorage.removeItem("jwt");
+    window.location.href = "login.html";
+}
+</script>
+</body>
+</html>

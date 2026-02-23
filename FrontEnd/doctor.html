@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Doctor Dashboard</title>
+    <script src="doctorService.js" defer></script>
+  </head>
+  <body>
+    <h2>Doctor Dashboard</h2>
+    <p id="data"></p>
+    
+    <button onclick="viewProfile()">View my Profile</button>
+    <div id="doctorsProfile" style="display: none">
+      <h3>Your Profile</h3>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Specialization</th>
+          </tr>
+        </thead>
+        <tbody id="doctorBody"></tbody>
+      </table>
+
+      <!-- <script src="adminService.js"></script> -->
+    </div>
+
+    <button onclick="logout()">Logout</button>
+
+    <script>
+      const token = localStorage.getItem("jwt");
+      if (!token) {
+        window.location.href = "login.html";
+      }
+
+      fetch("http://localhost:8080/doctor/dashboard", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+        .then((res) => {
+          if (!res.ok) {
+            window.location.href = "login.html";
+          }
+          return res.text();
+        })
+        .then((data) => {
+          document.getElementById("data").innerText = data;
+        });
+
+      function logout() {
+        localStorage.removeItem("jwt");
+        window.location.href = "login.html";
+      }
+    </script>
+  </body>
+</html>

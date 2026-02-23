@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Admin Dashboard</title>
+    <script src="adminService.js" defer></script>
+    <style>
+      body {
+        font-family: Arial;
+        padding: 20px;
+      }
+      button {
+        margin: 5px;
+        padding: 8px 12px;
+      }
+      .card {
+        display: inline-block;
+        padding: 15px;
+        margin: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        width: 200px;
+        text-align: center;
+      }
+      .low {
+        background-color: #ffe0e0;
+      }
+      .expired {
+        background-color: #ffcccc;
+      }
+      .summary {
+        background-color: #e0f0ff;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Admin Dashboard</h2>
+
+    <button onclick="loadSummary()">Dashboard Summary</button>
+    <button onclick="loadMedicines()">Manage Medicines</button>
+    <button onclick="loadInventory()">View Inventory</button>
+    <button onclick="loadLowStock()">Low Stock</button>
+    <button onclick="loadExpired()">Expired Medicines</button>
+    <button onclick="loadLogs()">View Logs</button><br /><br />
+    <button onclick="showAddDoctorForm()">Add Doctor</button>
+    <button onclick="showDoctors()">View Doctors</button>
+    <div id="doctorsList" style="display: none">
+      <h3>Doctors List</h3>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Specialization</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="doctorBody"></tbody>
+      </table>
+
+      <!-- <script src="adminService.js"></script> -->
+    </div>
+    <div id="addDoctorForm" style="display: none">
+      <h3>Add Doctor</h3>
+
+      <input type="text" id="username" placeholder="Username" /><br /><br />
+      <input type="password" id="password" placeholder="Password" /><br /><br />
+
+      <input type="text" id="name" placeholder="Doctor name" /><br /><br />
+
+      <input
+        type="text"
+        id="specialization"
+        placeholder="Specialization"
+      /><br /><br />
+
+      <input type="text" id="phone" placeholder="Phone Number" /><br /><br />
+
+      <button onclick="addDoctor()">Submit</button>
+      <button onclick="hideAddDoctorForm()">Cancel</button>
+
+      <p id="doctorResponse"></p>
+    </div>
+
+    <button onclick="showAddPatientForm()">Add Patient</button>
+    <button onclick="showAddMedicineForm()">Add Medicine</button>
+    <br /><br />
+    <button onclick="logout()">Logout</button>
+
+    <hr />
+
+    <div id="content"></div>
+
+    <script>
+      const token = localStorage.getItem("jwt");
+
+      if (!token) {
+        window.location.href = "login.html";
+      }
+
+      function logout() {
+        localStorage.removeItem("jwt");
+        window.location.href = "login.html";
+      }
+    </script>
+  </body>
+</html>

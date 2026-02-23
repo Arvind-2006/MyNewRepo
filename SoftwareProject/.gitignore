@@ -1,0 +1,56 @@
+# ========================
+# IntelliJ IDEA files
+# ========================
+.idea/
+*.iml
+*.iws
+out/
+
+# ========================
+# Build output
+# ========================
+/target/
+/build/
+
+# ========================
+# OS files
+# ========================
+.DS_Store
+Thumbs.db
+
+# ========================
+# Logs
+# ========================
+*.log
+
+# ========================
+# Environment / secrets
+# ========================
+.env
+application-*.properties
+application-*.yml
+
+# ========================
+# Java / class files
+# ========================
+*.class
+*.war
+*.ear
+
+# ========================
+# Maven / Gradle
+# ========================
+/.mvn/
+/.gradle/
+/**/gradle-wrapper.jar
+/dependency-reduced-pom.xml
+/build/
+/!gradle/wrapper/gradle-wrapper.jar
+
+# ========================
+# Keep your source code!
+# ========================
+
+# ========================
+# Tests (optional)
+/target/test-classes/
