@@ -244,6 +244,8 @@ function showDoctors() {
         console.error(error);
         alert("Error loading doctors");
     });
+}function hideDoctors() {
+    document.getElementById("doctorsList").style.display = "none";
 }
 function deleteDoctor(id) {
 

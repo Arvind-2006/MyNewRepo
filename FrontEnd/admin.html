@@ -1,231 +1,294 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Admin Dashboard</title>
     <script src="adminService.js" defer></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-        }
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>:root {
+    --sidebar-width: 260px;
+    --primary-color: #4facfe;
+    --accent-color: #f093fb;
+    --bg-body: #f8f9fa;
+    --sidebar-bg: #1e293b;
+    --text-main: #334155;
+    --white: #ffffff;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
 
-        body {
-            /* Vibrant Animated-style Gradient from your Login Page */
-            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start; /* Allows scrolling if content is long */
-            padding: 40px 20px;
-        }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
 
-        /* Glassmorphism Container */
-        .admin-container {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 40px;
-            border-radius: 24px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 900px; /* Wider for tables */
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
+body {
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    display: flex;
+    min-height: 100vh;
+}
 
-        h2 {
-            margin-bottom: 20px;
-            color: #d13d6d;
-            font-size: 32px;
-            font-weight: 700;
-        }
+/* SIDEBAR NAVIGATION */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--sidebar-bg);
+    color: white;
+    position: fixed;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
 
-        h3 {
-            margin: 20px 0;
-            color: #f5576c;
-        }
+.sidebar-header {
+    padding: 30px 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
 
-        /* Button Grid Styling */
-        .nav-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            margin-bottom: 30px;
-        }
+.sidebar-header h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    background: linear-gradient(to right, #4facfe, #f093fb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
-        button {
-            padding: 12px;
-            background: linear-gradient(to right, #f093fb, #f5576c);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(245, 87, 108, 0.3);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
+.nav-links {
+    padding-top: 20px;
+    flex-grow: 1;
+}
 
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(245, 87, 108, 0.5);
-        }
+.nav-links button {
+    width: 100%;
+    padding: 15px 25px;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    text-align: left;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+}
 
-        button.logout-btn {
-            background: #444;
-            margin-top: 30px;
-            width: auto;
-            padding: 10px 30px;
-        }
+.nav-links button:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--white);
+    padding-left: 35px;
+}
 
-        /* Input Styling */
-        input {
-            width: 100%;
-            max-width: 400px;
-            padding: 12px 20px;
-            margin-bottom: 15px;
-            border: 2px solid #eee;
-            border-radius: 12px;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            outline: none;
-            background-color: #fcfcfc;
-        }
+/* MAIN CONTENT WRAPPER */
+.main-content {
+    margin-left: var(--sidebar-width);
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
 
-        input:focus {
-            border-color: #f093fb;
-            box-shadow: 0 0 10px rgba(240, 147, 251, 0.4);
-        }
+/* TOP HEADER */
+header {
+    height: 70px;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
 
-        /* Table Styling */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-        }
+.header-left h3 { font-weight: 600; color: #1e293b; }
 
-        th {
-            background: #f5576c;
-            color: white;
-            padding: 12px;
-            font-weight: 600;
-        }
+.header-right { display: flex; align-items: center; gap: 20px; }
 
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-            color: #444;
-        }
+.user-profile { font-size: 0.85rem; font-weight: 600; color: #64748b; }
 
-        tr:hover {
-            background-color: #fff5f6;
-        }
+/* WORKSPACE AREA */
+.workspace {
+    padding: 40px;
+}
 
-        hr {
-            border: none;
-            border-top: 1px solid #eee;
-            margin: 30px 0;
-        }
+.content-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: var(--shadow);
+}
 
-        #content {
-            margin-top: 20px;
-            text-align: left;
-        }
+/* RE-STYLING YOUR TABLES */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
 
-        /* Form sections */
-        .form-section {
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #eee;
-        }
-    </style>
-</head>
-<body>
+th {
+    background-color: #f1f5f9;
+    color: #475569;
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid #e2e8f0;
+}
 
-<div class="admin-container">
-    <h2>Admin Dashboard</h2>
+td {
+    padding: 15px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.9rem;
+}
 
-    <div class="nav-buttons">
-        <button onclick="loadSummary()">Summary</button>
-        <button onclick="loadMedicines()">Medicines</button>
-        <button onclick="loadInventory()">Inventory</button>
-        <button onclick="loadLowStock()">Low Stock</button>
-        <button onclick="loadExpired()">Expired</button>
-        <button onclick="loadLogs()">Logs</button>
-    </div>
+tr:hover { background-color: #f8fafc; }
 
-    <div class="nav-buttons" style="grid-template-columns: 1fr 1fr 1fr;">
-        <button onclick="showAddDoctorForm()">+ Add Doctor</button>
-        <button onclick="showDoctors()">View Doctors</button>
-        <button onclick="showAddMedicineForm()">+ Add Medicine</button>
-    </div>
+/* FORMS */
+.form-section {
+    max-width: 600px;
+    margin-top: 20px;
+}
 
-    <div id="doctorsList" style="display: none">
-        <h3>Doctors List</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Specialization</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="doctorBody"></tbody>
-        </table>
-    </div>
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    outline: none;
+}
 
-    <div id="addDoctorForm" class="form-section" style="display: none">
-        <h3>Add New Doctor</h3>
-        <input type="text" id="username" placeholder="Username" /><br />
-        <input type="password" id="password" placeholder="Password" /><br />
-        <input type="text" id="name" placeholder="Doctor name" /><br />
-        <input type="text" id="specialization" placeholder="Specialization" /><br />
-        <input type="text" id="phone" placeholder="Phone Number" /><br />
-        <button onclick="addDoctor()" style="width: auto; padding: 10px 40px;">Submit</button>
-        <button onclick="hideAddDoctorForm()" style="background: #ccc; width: auto;">Cancel</button>
-        <p id="doctorResponse"></p>
-    </div>
+input:focus { border-color: var(--primary-color); }
 
-    <div id="addMedicineForm" class="form-section" style="display: none">
-        <h3>Add Medicine</h3>
-        <input type="text" id="medicineName" placeholder="Medicine Name" /><br />
-        <input type="text" id="description" placeholder="Description" /><br />
-        <input type="number" id="price" placeholder="Price" /><br />
-        <input type="text" id="manufacturer" placeholder="Manufacturer" /><br />
-        <button onclick="addMedicine()" style="width: auto; padding: 10px 40px;">Submit</button>
-        <button onclick="hideAddMedicineForm()" style="background: #ccc; width: auto;">Cancel</button>
-        <p id="medicineResponse"></p>
-    </div>
-
-    <hr />
+.logout-btn {
+    margin: 20px;
+    background: #ef4444;
+    padding: 10px;
+    border-radius: 8px;
+    color: white;
+    border: none;
+    cursor: pointer;
+}</style>
+  </head>
+  <body>
     
-    <div id="content">
-        </div>
+    <div class="sidebar">
+    <div class="sidebar-header">
+        <h2>HOSPITAL ERP</h2>
+        <p style="font-size: 10px; color: #64748b; margin-top: 5px;">ADMIN PANEL v2.0</p>
+    </div>
+    
+    <div class="nav-links">
+        <div style="padding: 10px 25px; font-size: 11px; color: #475569; text-transform: uppercase; letter-spacing: 1px;">Analytics</div>
+        <button onclick="loadSummary()">Dashboard Summary</button>
+        <button onclick="loadLogs()">System Logs</button>
+
+        <div style="padding: 20px 25px 10px; font-size: 11px; color: #475569; text-transform: uppercase; letter-spacing: 1px;">Inventory</div>
+        <button onclick="loadMedicines()">Medicine Catalog</button>
+        <button onclick="loadInventory()">Stock Management</button>
+        <button onclick="loadLowStock()">Low Stock Alerts</button>
+        <button onclick="loadExpired()">Expired Goods</button>
+        <button onclick="showAddMedicineForm()" style="color: var(--primary-color);">+ Add New Medicine</button>
+
+        <div style="padding: 20px 25px 10px; font-size: 11px; color: #475569; text-transform: uppercase; letter-spacing: 1px;">Staff Management</div>
+        <button onclick="showDoctors()">View Doctor Staff</button>
+        <button onclick="showAddDoctorForm()" style="color: var(--primary-color);">+ Register Doctor</button>
+    </div>
 
     <button onclick="logout()" class="logout-btn">Logout</button>
 </div>
 
-<script>
-    const token = localStorage.getItem("jwt");
-    if (!token) {
-        window.location.href = "login.html";
-    }
+<div class="main-content">
+    <header>
+        <div class="header-left">
+            <h3>Management Portal</h3>
+        </div>
+        <div class="header-right">
+            <div class="user-profile">Welcome, <strong>Admin</strong></div>
+        </div>
+    </header>
 
-    function logout() {
+    <div class="workspace">
+        <div class="content-card">
+            
+            <div id="content">
+                <h3 style="color: #1e293b;">System Overview</h3>
+                <p style="color: #64748b;">Please select a module from the left sidebar to begin managing the hospital records.</p>
+            </div>
+
+            <div id="doctorsList" style="display: none">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;">
+                    <h3 style="margin:0;">Doctor Directory</h3>
+                    <button onclick="hideDoctors()" style="background: #f1f5f9; color: #475569; border:none; padding: 5px 15px; border-radius: 5px; cursor:pointer;">Close</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Specialization</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="doctorBody"></tbody>
+                </table>
+            </div>
+
+            <div id="addDoctorForm" class="form-section" style="display: none">
+                <h3 style="margin-bottom: 20px;">Register New Medical Staff</h3>
+                <label style="font-size: 12px; font-weight: 600;">Account Credentials</label>
+                <input type="text" id="username" placeholder="Username" />
+                <input type="password" id="password" placeholder="Password" />
+                
+                <label style="font-size: 12px; font-weight: 600;">Profile Details</label>
+                <input type="text" id="name" placeholder="Full Doctor Name" />
+                <input type="text" id="specialization" placeholder="Primary Specialization" />
+                <input type="text" id="phone" placeholder="Contact Number" />
+                
+                <div style="margin-top: 10px;">
+                    <button onclick="addDoctor()" style="background: var(--primary-color); color:white; border:none; padding: 12px 30px; border-radius: 8px; cursor:pointer; font-weight:600;">Register Doctor</button>
+                    <button onclick="hideAddDoctorForm()" style="background: transparent; color: #64748b; border:none; margin-left:15px; cursor:pointer;">Cancel</button>
+                </div>
+                <p id="doctorResponse" style="margin-top:10px; font-size:13px;"></p>
+            </div>
+
+            <div id="addMedicineForm" class="form-section" style="display: none">
+                <h3 style="margin-bottom: 20px;">Inventory Entry</h3>
+                <input type="text" id="medicineName" placeholder="Medicine Name (e.g. Paracetamol)" />
+                <input type="text" id="description" placeholder="Short Description" />
+                <input type="number" id="price" placeholder="Unit Price (₹)" />
+                <input type="text" id="manufacturer" placeholder="Manufacturer Name" />
+                
+                <div style="margin-top: 10px;">
+                    <button onclick="addMedicine()" style="background: var(--primary-color); color:white; border:none; padding: 12px 30px; border-radius: 8px; cursor:pointer; font-weight:600;">Add to Catalog</button>
+                    <button onclick="hideAddMedicineForm()" style="background: transparent; color: #64748b; border:none; margin-left:15px; cursor:pointer;">Cancel</button>
+                </div>
+                <p id="medicineResponse" style="margin-top:10px; font-size:13px;"></p>
+            </div>
+
+        </div> <footer style="margin-top: 30px; text-align: center; font-size: 12px; color: #94a3b8;">
+            &copy; 2026 Hospital Management System | Server Status: <span style="color: #10b981;">Online</span>
+        </footer>
+    </div>
+</div>
+    <script>
+      const token = localStorage.getItem("jwt");
+      if (!token) {
+        window.location.href = "login.html";
+      }
+
+      function logout() {
         localStorage.removeItem("jwt");
         window.location.href = "login.html";
-    }
-</script>
-
-</body>
+      }
+    </script>
+  </body>
 </html>
