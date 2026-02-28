@@ -1,79 +1,141 @@
-<!doctype html>
-<html>
-  <head>
-    <title>Doctor Dashboard</title>
-    <script src="doctorService.js" defer></script>
-  </head>
-  <body>
-    <h2>Doctor Dashboard</h2>
-    <p id="data"></p>
-    
-    <button onclick="viewProfile()">View my Profile</button>
-    <div id="doctorsProfile" style="display: none">
-      <h3>Your Profile</h3>
-      <table border="1">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Specialization</th>
-          </tr>
-        </thead>
-        <tbody id="doctorBody"></tbody>
-      </table>
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Doctor Portal | Hospital ERP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-width: 260px;
+            --doctor-primary: #00b894; 
+            --sidebar-bg: #1e272e;
+            --bg-body: #f1f2f6;
+            --text-main: #2d3436;
+            --white: #ffffff;
+        }
 
-      <!-- <script src="adminService.js"></script> -->
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-body); display: flex; min-height: 100vh; color: var(--text-main); }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: var(--sidebar-width); background: var(--sidebar-bg); color: white;
+            position: fixed; height: 100vh; display: flex; flex-direction: column; overflow-y: auto;
+        }
+        .sidebar-header { padding: 30px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center; }
+        .sidebar-header h2 { font-size: 18px; color: var(--doctor-primary); letter-spacing: 1px; }
+
+        .nav-links { flex: 1; padding-top: 20px; }
+        .nav-label { padding: 10px 25px; font-size: 11px; color: #7f8c8d; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-links button {
+            width: 100%; padding: 15px 25px; background: none; border: none;
+            color: #ced6e0; text-align: left; cursor: pointer; transition: 0.3s; font-size: 14px;
+        }
+        .nav-links button:hover { background: rgba(255,255,255,0.05); color: var(--doctor-primary); padding-left: 30px; }
+
+        .sidebar-footer { padding: 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .logout-btn { width: 100%; padding: 12px; background: #ff4757; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+
+        /* MAIN CONTENT */
+        .main-content { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; }
+        header { height: 70px; background: white; display: flex; align-items: center; padding: 0 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); justify-content: space-between; }
+        .workspace { padding: 40px; }
+        .content-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); min-height: 500px; }
+
+        /* TABLES & FORMS */
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f1f2f6; padding-bottom: 15px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; background: #f8f9fa; padding: 15px; font-size: 13px; color: #2f3542; }
+        td { padding: 15px; border-bottom: 1px solid #f1f2f6; }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: #57606f; }
+        input { width: 100%; padding: 12px; border: 1px solid #dfe4ea; border-radius: 8px; outline: none; }
+        input:focus { border-color: var(--doctor-primary); }
+
+        .form-actions { display: flex; gap: 15px; margin-top: 25px; }
+        .btn-submit { background: var(--doctor-primary); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 600; cursor: pointer; flex: 2; }
+        .btn-cancel { background: #f1f2f6; color: #57606f; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; flex: 1; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="sidebar-header">
+        <h2>DOCTOR PORTAL</h2>
+        <p id="data" style="font-size: 10px; color: #747d8c; margin-top: 5px;"></p>
     </div>
-
-    <button onclick="showAddPrescriptionForm()">Add Prescription</button>
-    <div id="addPrescriptionForm" style="display: none; margin-top: 20px;">
-      <h3>Add Prescription</h3>
-      <form id="prescriptionForm">
-        <label>Patient Name:</label>
-        <input type="text" id="patientName" required><br><br>
-
-        <label>Diagnosis:</label>
-        <input type="text" id="diagnosis" required><br><br>
-
-        <label>Medicine ID:</label>
-        <input type="number" id="medicineId" required><br><br>
-
-        <label>Quantity:</label>
-        <input type="number" id="quantity" required><br><br>
-
-        <button type="submit">Submit</button>
-      </form>
-      <p id="formResult"></p>
+    <div class="nav-links">
+        <div class="nav-label">Main</div>
+        <button onclick="viewProfile()">👤 My Profile</button>
+        <div class="nav-label">Patient Care</div>
+        <button onclick="showAddPrescriptionForm()">📝 Add Prescription</button>
     </div>
+    <div class="sidebar-footer">
+        <button onclick="logout()" class="logout-btn">Logout</button>
+    </div>
+</div>
 
-    <button onclick="logout()">Logout</button>
+<div class="main-content">
+    <header>
+        <h3>Medical Workspace</h3>
+        <div class="user-profile">Status: <span style="color: #00b894;">● Active</span></div>
+    </header>
 
-    <script>
-      const token = localStorage.getItem("jwt");
-      if (!token) {
-        window.location.href = "login.html";
-      }
+    <div class="workspace">
+        <div class="content-card">
+            <div id="welcomeScreen">
+                <h3>Welcome to your Dashboard</h3>
+                <p style="color: #7f8c8d;">Please use the sidebar to manage your profile or issue prescriptions.</p>
+            </div>
 
-      fetch("http://localhost:8080/doctor/dashboard", {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-        .then((res) => {
-          if (!res.ok) {
-            window.location.href = "login.html";
-          }
-          return res.text();
-        })
-        .then((data) => {
-          document.getElementById("data").innerText = data;
-        });
+            <div id="doctorsProfile" style="display: none">
+                <div class="section-header">
+                    <h3>Professional Profile</h3>
+                    <button onclick="hideAll()" style="color: #ff4757; border: none; background: none; cursor: pointer; font-weight: 600;">Cancel ✖</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr><th>Name</th><th>Email</th><th>Phone</th><th>Specialization</th></tr>
+                    </thead>
+                    <tbody id="doctorBody"></tbody>
+                </table>
+            </div>
 
-      function logout() {
+            <div id="addPrescriptionForm" style="display: none;">
+                <h3 style="margin-bottom: 20px;">Issue New Prescription</h3>
+                <form id="prescriptionForm">
+                    <div class="form-group"><label>Patient Name</label><input type="text" id="patientName" required></div>
+                    <div class="form-group"><label>Diagnosis</label><input type="text" id="diagnosis" required></div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group"><label>Medicine ID</label><input type="number" id="medicineId" required></div>
+                        <div class="form-group"><label>Quantity</label><input type="number" id="quantity" required></div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit">Submit Prescription</button>
+                        <button type="button" class="btn-cancel" onclick="hideAll()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="doctorService.js"></script>
+<script>
+    const token = localStorage.getItem("jwt");
+    if (!token) { window.location.href = "login.html"; }
+
+    function logout() {
         localStorage.removeItem("jwt");
         window.location.href = "login.html";
-      }
-    </script>
-  </body>
-</html>
+    }
+
+    fetch("http://localhost:8080/doctor/dashboard", {
+        headers: { "Authorization": "Bearer " + token }
+    })
+    .then(res => res.text())
+    .then(data => document.getElementById("data").innerText = data);
+</script>
+</body>
+</html> 

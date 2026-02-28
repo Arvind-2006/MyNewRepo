@@ -1,72 +1,58 @@
 const BASE_URL = "http://localhost:8080";
-function viewProfile() {
 
-    const token = localStorage.getItem("jwt");
-
-    fetch("http://localhost:8080/doctor/profile", {
-        method: "GET",
-        headers: {
-            "Authorization": "Bearer " + token
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Failed to fetch profile");
-        }
-        return response.json();
-    })
-    .then(data => {
-
-        document.getElementById("doctorsProfile").style.display = "block";
-
-        const tbody = document.getElementById("doctorBody");
-        tbody.innerHTML = "";
-
-        const row = document.createElement("tr");
-
-        row.innerHTML = `
-            <td>${data.name}</td>
-            <td>${data.email}</td>
-            <td>${data.phone}</td>
-            <td>${data.specialization}</td>
-        `;
-
-        tbody.appendChild(row);
-    })
-    .catch(error => {
-        console.error(error);
-        alert("Error loading profile");
+// Toggles visibility between views
+function showSection(sectionId) {
+    const sections = ['doctorsProfile', 'addPrescriptionForm', 'welcomeScreen'];
+    sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = (id === sectionId) ? "block" : "none";
     });
 }
-document.getElementById("prescriptionForm").addEventListener("submit", function(e) {
-    e.preventDefault(); // Prevent page reload
 
-    const patientName = document.getElementById("patientName").value;
-    const diagnosis = document.getElementById("diagnosis").value;
-    const medicineId = document.getElementById("medicineId").value;
-    const quantity = document.getElementById("quantity").value;
+function hideAll() {
+    showSection('welcomeScreen');
+}
 
-    addPrescription(patientName, diagnosis, medicineId, quantity);
-});
-function addPrescription(patientName, diagnosis, medicineId, quantity) {
+// PROFILE LOGIC
+function viewProfile() {
     const token = localStorage.getItem("jwt");
-    if (!token) {
-        alert("You are not logged in!");
-        return;
-    }
+    fetch(`${BASE_URL}/doctor/profile`, {
+        method: "GET",
+        headers: { "Authorization": "Bearer " + token }
+    })
+    .then(res => res.json())
+    .then(data => {
+        showSection('doctorsProfile');
+        document.getElementById("doctorBody").innerHTML = `
+            <tr>
+                <td>${data.name}</td>
+                <td>${data.email}</td>
+                <td>${data.phone}</td>
+                <td>${data.specialization}</td>
+            </tr>`;
+    })
+    .catch(err => alert("Error loading profile"));
+}
+
+// PRESCRIPTION LOGIC
+function showAddPrescriptionForm() {
+    showSection('addPrescriptionForm');
+}
+
+document.getElementById("prescriptionForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const token = localStorage.getItem("jwt");
 
     const payload = {
-        patientName: patientName,
-        diagnosis: diagnosis,
-        items: [
-            {
-                medicineId: parseInt(medicineId),
-                quantity: parseInt(quantity)
-            }
-        ]
+        patientName: document.getElementById("patientName").value,
+        diagnosis: document.getElementById("diagnosis").value,
+        items: [{
+            medicineId: parseInt(document.getElementById("medicineId").value),
+            quantity: parseInt(document.getElementById("quantity").value)
+        }]
     };
 
-    fetch(`${BASE_URL}/doctor/prescriptions`, {
+    fetch(`${BASE_URL}/doctor/prescription`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -75,20 +61,13 @@ function addPrescription(patientName, diagnosis, medicineId, quantity) {
         body: JSON.stringify(payload)
     })
     .then(res => {
-        if (!res.ok) {
-            throw new Error("Failed to add prescription");
-        }
+        if (!res.ok) throw new Error("Check Medicine ID or Stock");
         return res.json();
     })
     .then(data => {
-        console.log("Prescription added:", data);
-        alert("Prescription added successfully with ID: " + data.id);
+        alert("Success! Prescription issued.");
+        document.getElementById("prescriptionForm").reset();
+        hideAll();
     })
-    .catch(err => {
-        console.error(err);
-        alert("Error adding prescription: " + err.message);
-    });
-}
-function showAddPrescriptionForm() {
-    document.getElementById("addPrescriptionForm").style.display = "block";
-}
+    .catch(err => alert("Error: " + err.message));
+});
