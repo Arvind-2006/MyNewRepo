@@ -1,68 +1,37 @@
+function openWorkspace() {
+    document.getElementById("contentArea").style.display = "block";
+    // Scroll to the content area smoothly
+    document.getElementById("contentArea").scrollIntoView({ behavior: 'smooth' });
+}
+
 function loadInventory() {
+    openWorkspace(); // Show the white box
     fetch("http://localhost:8080/admin/inventory", {
-        headers: {
-            "Authorization": "Bearer " + token
-        }
+        headers: { "Authorization": "Bearer " + token }
     })
     .then(res => res.json())
     .then(data => {
-        let html = "<h3>Inventory</h3><ul>";
+        let html = "<h3>Inventory List</h3><table><thead><tr><th>Medicine</th><th>Stock</th><th>Expiry</th></tr></thead><tbody>";
         data.forEach(i => {
-            html += "<li>" + i.medicine.medicineName +
-                    " - Stock: " + i.quantityAvailable +
-                    " - Expiry: " + i.expiryDate +
-                    "</li>";
+            html += `<tr>
+                        <td>${i.medicine.medicineName}</td>
+                        <td>${i.quantityAvailable}</td>
+                        <td>${i.expiryDate}</td>
+                    </tr>`;
         });
-        html += "</ul>";
+        html += "</tbody></table>";
         document.getElementById("content").innerHTML = html;
     });
 }
 
-
-// Show Add Doctor Form
+//Show Add Doctor Form
 function showAddDoctorForm() {
     document.getElementById("addDoctorForm").style.display = "block";
 }
-
-// Hide Add Doctor Form
 function hideAddDoctorForm() {
     document.getElementById("addDoctorForm").style.display = "none";
 }
 
-// // Add Doctor API Call
-// function addDoctor() {
-
-//     const token = localStorage.getItem("jwt");  // FIXED
-
-//     if (!token) {
-//         alert("You are not logged in!");
-//         return;
-//     }
-
-//     const doctorData = {
-//         name: document.getElementById("name").value,
-//         //password: document.getElementById("password").value,
-//         specialization: document.getElementById("specialization").value,
-//         role: document.getElementById("phone").value,
-//         email: document.getElementById("email").value
-//     };
-//     fetch("http://localhost:8080/admin/doctors", {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/json",
-//             "Authorization": "Bearer " + localStorage.getItem("jwt")
-//         },
-//         body: JSON.stringify(doctorData)
-//     })
-//     .then(response => response.text())
-//     .then(data => {
-//         document.getElementById("doctorResponse").innerText = data;
-//     })
-//     .catch(error => {
-//         console.error("Error:", error);
-//         document.getElementById("doctorResponse").innerText = "Error adding doctor!";
-//     });
-// }
 function addDoctor() {
 
     const token = localStorage.getItem("jwt");

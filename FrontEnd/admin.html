@@ -1,129 +1,231 @@
-<!doctype html>
-<html>
-  <head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
     <title>Admin Dashboard</title>
     <script src="adminService.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-      body {
-        font-family: Arial;
-        padding: 20px;
-      }
-      button {
-        margin: 5px;
-        padding: 8px 12px;
-      }
-      .card {
-        display: inline-block;
-        padding: 15px;
-        margin: 10px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        width: 200px;
-        text-align: center;
-      }
-      .low {
-        background-color: #ffe0e0;
-      }
-      .expired {
-        background-color: #ffcccc;
-      }
-      .summary {
-        background-color: #e0f0ff;
-      }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            /* Vibrant Animated-style Gradient from your Login Page */
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Allows scrolling if content is long */
+            padding: 40px 20px;
+        }
+
+        /* Glassmorphism Container */
+        .admin-container {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 900px; /* Wider for tables */
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #d13d6d;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        h3 {
+            margin: 20px 0;
+            color: #f5576c;
+        }
+
+        /* Button Grid Styling */
+        .nav-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            padding: 12px;
+            background: linear-gradient(to right, #f093fb, #f5576c);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(245, 87, 108, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(245, 87, 108, 0.5);
+        }
+
+        button.logout-btn {
+            background: #444;
+            margin-top: 30px;
+            width: auto;
+            padding: 10px 30px;
+        }
+
+        /* Input Styling */
+        input {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px 20px;
+            margin-bottom: 15px;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            outline: none;
+            background-color: #fcfcfc;
+        }
+
+        input:focus {
+            border-color: #f093fb;
+            box-shadow: 0 0 10px rgba(240, 147, 251, 0.4);
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #f5576c;
+            color: white;
+            padding: 12px;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            color: #444;
+        }
+
+        tr:hover {
+            background-color: #fff5f6;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #eee;
+            margin: 30px 0;
+        }
+
+        #content {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        /* Form sections */
+        .form-section {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
+
+<div class="admin-container">
     <h2>Admin Dashboard</h2>
 
-    <button onclick="loadSummary()">Dashboard Summary</button>
-    <button onclick="loadMedicines()">Manage Medicines</button>
-    <button onclick="loadInventory()">View Inventory</button>
-    <button onclick="loadLowStock()">Low Stock</button>
-    <button onclick="loadExpired()">Expired Medicines</button>
-    <button onclick="loadLogs()">View Logs</button><br /><br />
-    <button onclick="showAddDoctorForm()">Add Doctor</button>
-    <button onclick="showDoctors()">View Doctors</button>
+    <div class="nav-buttons">
+        <button onclick="loadSummary()">Summary</button>
+        <button onclick="loadMedicines()">Medicines</button>
+        <button onclick="loadInventory()">Inventory</button>
+        <button onclick="loadLowStock()">Low Stock</button>
+        <button onclick="loadExpired()">Expired</button>
+        <button onclick="loadLogs()">Logs</button>
+    </div>
+
+    <div class="nav-buttons" style="grid-template-columns: 1fr 1fr 1fr;">
+        <button onclick="showAddDoctorForm()">+ Add Doctor</button>
+        <button onclick="showDoctors()">View Doctors</button>
+        <button onclick="showAddMedicineForm()">+ Add Medicine</button>
+    </div>
+
     <div id="doctorsList" style="display: none">
-      <h3>Doctors List</h3>
-      <table border="1">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Specialization</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="doctorBody"></tbody>
-      </table>
-
-      <!-- <script src="adminService.js"></script> -->
-    </div>
-    <div id="addDoctorForm" style="display: none">
-      <h3>Add Doctor</h3>
-
-      <input type="text" id="username" placeholder="Username" /><br /><br />
-      <input type="password" id="password" placeholder="Password" /><br /><br />
-
-      <input type="text" id="name" placeholder="Doctor name" /><br /><br />
-
-      <input
-        type="text"
-        id="specialization"
-        placeholder="Specialization"
-      /><br /><br />
-
-      <input type="text" id="phone" placeholder="Phone Number" /><br /><br />
-
-      <button onclick="addDoctor()">Submit</button>
-      <button onclick="hideAddDoctorForm()">Cancel</button>
-
-      <p id="doctorResponse"></p>
+        <h3>Doctors List</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Specialization</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="doctorBody"></tbody>
+        </table>
     </div>
 
-    <!-- <button onclick="showAddPatientForm()">Add Patient</button> -->
-    <button onclick="showAddMedicineForm()">Add Medicine</button>
-    <div id="addMedicineForm" style="display: none">
-      <h3>Add Medicine</h3>
-      <input
-        type="text"
-        id="medicineName"
-        placeholder="Medicine Name"
-      /><br /><br />
-      <input
-        type="text"
-        id="description"
-        placeholder="Description"
-      /><br /><br />
-      <input type="number" id="price" placeholder="Price" /><br /><br />
-      <input
-        type="text"
-        id="manufacturer"
-        placeholder="Manufacturer"
-      /><br /><br />
-      <button onclick="addMedicine()">Submit</button>
-      <button onclick="hideAddMedicineForm()">Cancel</button>
-      <p id="medicineResponse"></p>
+    <div id="addDoctorForm" class="form-section" style="display: none">
+        <h3>Add New Doctor</h3>
+        <input type="text" id="username" placeholder="Username" /><br />
+        <input type="password" id="password" placeholder="Password" /><br />
+        <input type="text" id="name" placeholder="Doctor name" /><br />
+        <input type="text" id="specialization" placeholder="Specialization" /><br />
+        <input type="text" id="phone" placeholder="Phone Number" /><br />
+        <button onclick="addDoctor()" style="width: auto; padding: 10px 40px;">Submit</button>
+        <button onclick="hideAddDoctorForm()" style="background: #ccc; width: auto;">Cancel</button>
+        <p id="doctorResponse"></p>
     </div>
-    <br /><br />
-    <button onclick="logout()">Logout</button>
+
+    <div id="addMedicineForm" class="form-section" style="display: none">
+        <h3>Add Medicine</h3>
+        <input type="text" id="medicineName" placeholder="Medicine Name" /><br />
+        <input type="text" id="description" placeholder="Description" /><br />
+        <input type="number" id="price" placeholder="Price" /><br />
+        <input type="text" id="manufacturer" placeholder="Manufacturer" /><br />
+        <button onclick="addMedicine()" style="width: auto; padding: 10px 40px;">Submit</button>
+        <button onclick="hideAddMedicineForm()" style="background: #ccc; width: auto;">Cancel</button>
+        <p id="medicineResponse"></p>
+    </div>
 
     <hr />
+    
+    <div id="content">
+        </div>
 
-    <div id="content"></div>
+    <button onclick="logout()" class="logout-btn">Logout</button>
+</div>
 
-    <script>
-      const token = localStorage.getItem("jwt");
-
-      if (!token) {
+<script>
+    const token = localStorage.getItem("jwt");
+    if (!token) {
         window.location.href = "login.html";
-      }
+    }
 
-      function logout() {
+    function logout() {
         localStorage.removeItem("jwt");
         window.location.href = "login.html";
-      }
-    </script>
-  </body>
+    }
+</script>
+
+</body>
 </html>
